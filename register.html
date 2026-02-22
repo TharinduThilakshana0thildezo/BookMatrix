@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | LibraryOS</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/img/educatalog-logo.svg">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./assets/css/main.css">
+    <link rel="stylesheet" href="./assets/css/dark-mode.css">
+    <link rel="stylesheet" href="./assets/css/responsive.css">
+</head>
+<body>
+    <div class="hero-bg" aria-hidden="true">
+        <span class="hero-blob hero-blob--a"></span>
+        <span class="hero-blob hero-blob--b"></span>
+        <span class="hero-blob hero-blob--c"></span>
+    </div>
+    <div data-partial="nav"></div>
+    <div class="content" style="display:grid; place-items:center; min-height:100vh;">
+        <div class="section" style="max-width:620px; width:100%;">
+            <div class="page-header" style="margin-bottom:24px;">
+                <div>
+                    <p class="chip">Get started</p>
+                    <h2 class="page-header__title">Create a EduCatalog account</h2>
+                </div>
+            </div>
+            <form id="register-form" class="form grid grid--two" enctype="multipart/form-data">
+                <div class="form__group">
+                    <label class="form__label" for="user_name">Full Name</label>
+                    <input class="form__control" type="text" id="user_name" name="user_name" required placeholder="Enter your full name">
+                </div>
+                <div class="form__group">
+                    <label class="form__label" for="user_email_address">Email</label>
+                    <input class="form__control" type="email" id="user_email_address" name="user_email_address" required placeholder="Enter your email address">
+                </div>
+                <div class="form__group">
+                    <label class="form__label" for="user_contact_no">Phone</label>
+                    <input class="form__control" type="tel" id="user_contact_no" name="user_contact_no" required placeholder="Enter your phone number">
+                </div>
+                <div class="form__group">
+                    <label class="form__label" for="user_address">Address</label>
+                    <textarea class="form__control" id="user_address" name="user_address" required placeholder="Enter your full address"></textarea>
+                </div>
+                <div class="form__group">
+                    <label class="form__label" for="user_password">Password</label>
+                    <input class="form__control" type="password" id="user_password" name="user_password" required placeholder="Enter your password">
+                </div>
+                <div class="form__group">
+                    <label class="form__label" for="user_profile">Profile Photo (225x225, &lt;2MB)</label>
+                    <input class="form__control" type="file" id="user_profile" name="user_profile" accept="image/png,image/jpeg" required>
+                    <p class="form__hint">JPEG/PNG only. Required by backend validator.</p>
+                </div>
+                <div class="form__group" style="grid-column:1 / -1;">
+                    <button class="btn btn--primary" type="submit" style="width:100%;">Create Account</button>
+                </div>
+                <p class="form__hint" style="grid-column:1 / -1;">Already registered? <a href="./login.html">Login here</a></p>
+            </form>
+        </div>
+    </div>
+    <div data-partial="footer"></div>
+    <script type="module">
+        import { loadLayout } from './assets/js/layout.js';
+        import { initThemeToggle } from './assets/js/theme.js';
+        import { setPageTransition } from './assets/js/ui.js';
+        import { bindRegisterForm } from './assets/js/auth.js';
+
+        (async () => {
+            try {
+                await loadLayout();
+            } catch (e) {
+                console.error('Failed to load layout', e);
+            }
+            setPageTransition();
+            initThemeToggle();
+            bindRegisterForm();
+        })();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

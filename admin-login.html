@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login | LibraryOS</title>
+  <script>
+    (function() {
+      try {
+        var key = 'lms_theme';
+        var saved = localStorage.getItem(key);
+        var mode = (saved === 'dark' || saved === 'light')
+          ? saved
+          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        var root = document.documentElement;
+        root.classList.toggle('dark', mode === 'dark');
+        root.dataset.theme = mode;
+      } catch (e) {
+        // ignore; theme.js will handle it on fallback
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="./assets/css/main.css">
+  <link rel="stylesheet" href="./assets/css/dark-mode.css">
+  <link rel="stylesheet" href="./assets/css/responsive.css">
+</head>
+<body>
+  <div class="hero-bg" aria-hidden="true">
+    <span class="hero-blob hero-blob--a"></span>
+    <span class="hero-blob hero-blob--b"></span>
+    <span class="hero-blob hero-blob--c"></span>
+  </div>
+  <div class="layout" style="grid-template-columns: 1fr; max-width: 920px; margin: 0 auto;">
+    <main class="content">
+      <div class="page-hero" style="flex-direction: column; align-items: flex-start;">
+        <div>
+          <p class="eyebrow">Admin access</p>
+          <h1 class="page-hero__title">Control center login</h1>
+          <p class="page-hero__meta">Sign in with your unique admin email and password to enter the advanced control panel.</p>
+        </div>
+        <div class="pill">Default admin:</div>
+      </div>
+      <div class="glass-panel" style="max-width: 640px;">
+        <form class="form" id="admin-login-form">
+          <div class="form__group">
+            <label class="form__label" for="admin_email">Admin Email</label>
+            <input class="form__control" type="email" id="admin_email" name="admin_email" required placeholder="Enter admin email">
+          </div>
+          <div class="form__group">
+            <label class="form__label" for="admin_password">Password</label>
+            <input class="form__control" type="password" id="admin_password" name="admin_password" required placeholder="Enter Admin password">
+          </div>
+          <button class="btn btn--primary" type="submit">Sign in</button>
+          <p class="form__hint">Use the default admin or your provisioned admin account.</p>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { adminLogin, saveAdminSession } from './assets/js/admin.js';
+    import { initThemeToggle } from './assets/js/theme.js';
+    import { setPageTransition, showToast } from './assets/js/ui.js';
+
+    setPageTransition();
+    initThemeToggle();
+
+    const form = document.getElementById('admin-login-form');
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('admin_email').value.trim();
+        const password = document.getElementById('admin_password').value;
+        try {
+          await adminLogin({ email, password });
+          showToast && showToast('Welcome back, admin', 'info');
+          window.location.href = './admin-dashboard.html';
+        } catch (err) {
+          showToast ? showToast(err.message || 'Login failed', 'error') : alert(err.message || 'Login failed');
+        }
+      });
+    }
+  </script>
+</body>
+</html>

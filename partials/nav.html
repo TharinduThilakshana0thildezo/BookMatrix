@@ -1,0 +1,33 @@
+<nav class="site-nav">
+    <div class="site-nav__brand">
+        <button class="brand-mark" type="button" aria-label="EduCatalog logo">
+            <img src="./assets/img/educatalog-logo.svg" alt="EduCatalog crest logo" loading="lazy">
+        </button>
+        <div class="brand-copy">
+            <span class="brand-name">BookMatrix</span>
+            <span class="brand-tagline"></span>
+        </div>
+    </div>
+    <div class="site-nav__links">
+        <a href="./index.html">Home</a>
+        <a href="./dashboard.html">Dashboard</a>
+        <a href="./books.html">Books</a>
+        <a href="./issue.html">Issue</a>
+    </div>
+    <div class="site-nav__actions" style="display:flex; align-items:center; gap:12px;">
+        <button class="theme-toggle--nav" type="button" aria-label="Toggle dark mode" data-theme-toggle>
+            <span class="theme-toggle__icon" data-theme-icon>☾</span>
+        </button>
+        <div data-auth-section="guest" class="site-nav__auth site-nav__auth--guest" style="display:flex; align-items:center; gap:12px;">
+            <a href="./login.html" class="btn btn--outline">Login</a>
+            <a class="btn btn--primary" href="./register.html">Register</a>
+            <a class="btn btn--ghost" href="./admin-login.html" aria-label="Admin login">Admin</a>
+        </div>
+        <div data-auth-section="user" class="site-nav__auth site-nav__auth--user" style="display:none; align-items:center; gap:12px;">
+            <a class="user-chip" href="./profile.html" aria-label="Profile">
+                <div class="user-chip__avatar" data-user-avatar>U</div>
+                <div class="user-chip__name" data-user-name>Profile</div>
+            </a>
+        </div>
+    </div>
+</nav>

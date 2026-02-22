@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookMatrix | Premium Library Experience</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/img/educatalog-logo.svg">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./assets/css/main.css">
+    <link rel="stylesheet" href="./assets/css/dark-mode.css">
+    <link rel="stylesheet" href="./assets/css/responsive.css">
+</head>
+<body>
+    <div class="hero-bg" aria-hidden="true">
+        <span class="hero-blob hero-blob--a"></span>
+        <span class="hero-blob hero-blob--b"></span>
+        <span class="hero-blob hero-blob--c"></span>
+    </div>
+    <div data-partial="nav"></div>
+    <div class="content">
+        <header class="lux-hero lux-hero--index">
+            <div class="lux-hero__grid">
+                <div>
+                    <span class="lux-hero__badge lux-hero__badge--glow">BookMatrix</span>
+                    <h1 class="lux-hero__title">A Professional Library Management, crafted for modern institutions.</h1>
+                    <p class="lux-hero__copy">A premium experience with glassy surfaces, golden gradients, and responsive layouts. Manage books, users, and circulation with fintech-level polish.</p>
+                    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                        <a class="btn btn--primary" href="./login.html">Launch Console</a>
+                        <a class="btn btn--outline" href="./register.html">Create Account</a>
+                    </div>
+                    <div class="chip" style="margin-top:12px; display:inline-flex; align-items:center; gap:8px; background:rgba(242, 201, 76, 0.16); border:1px solid rgba(242, 201, 76, 0.32); color:var(--text-primary);">
+                        ✦ Exprience our library management with our cutting-edge platform. ✦
+                    </div>
+                </div>
+                <div class="lux-hero__panel lux-hero__panel--glass">
+                    <div class="card__label" style="color:var(--text-secondary);">Live Snapshot</div>
+                    <div class="grid" style="margin-top:14px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));">
+                        <div class="card" style="background:linear-gradient(135deg, rgba(242, 201, 76, 0.16), rgba(185, 138, 46, 0.08)); border:1px solid rgba(242, 201, 76, 0.32);">
+                            <div class="card__label">Total Books</div>
+                            <div class="card__value">12,480</div>
+                            <div class="card__trend">↑ 6.4% vs last month</div>
+                        </div>
+                        <div class="card" style="background:rgba(31, 111, 235, 0.08); border:1px solid rgba(31,111,235,0.18);">
+                            <div class="card__label">Issuance SLA</div>
+                            <div class="card__value">98.3%</div>
+                            <div class="card__trend" style="color:#16a34a;">↑ within 1 hr</div>
+                        </div>
+                        <div class="card" style="background:linear-gradient(135deg, rgba(242, 201, 76, 0.2), rgba(217, 164, 65, 0.14)); border:1px solid rgba(242, 201, 76, 0.28);">
+                            <div class="card__label">Gold-tier uptime</div>
+                            <div class="card__value">99.95%</div>
+                            <div class="card__trend" style="color:#d97706;">Redundant & observed</div>
+                        </div>
+                    </div>
+                    <p class="hero__subtitle" style="margin-top:12px;">Built on a clean PHP backend. Connect via fetch API without mixing HTML into PHP.</p>
+                </div>
+            </div>
+            <div class="lux-hero__glow"></div>
+            <div class="lux-hero__orb"></div>
+            <div class="lux-hero__rings"></div>
+            <div class="lux-hero__beam"></div>
+        </header>
+    </div>
+    <div data-partial="footer"></div>
+    <script type="module">
+        import { loadLayout } from './assets/js/layout.js';
+        import { initThemeToggle } from './assets/js/theme.js';
+        import { setPageTransition } from './assets/js/ui.js';
+
+        (async () => {
+            try {
+                await loadLayout();
+            } catch (e) {
+                console.error('Failed to load layout', e);
+            }
+            setPageTransition();
+            initThemeToggle();
+        })();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

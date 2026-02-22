@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | LibraryOS</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/img/educatalog-logo.svg">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./assets/css/main.css">
+    <link rel="stylesheet" href="./assets/css/dark-mode.css">
+    <link rel="stylesheet" href="./assets/css/responsive.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="hero-bg" aria-hidden="true">
+        <span class="hero-blob hero-blob--a"></span>
+        <span class="hero-blob hero-blob--b"></span>
+        <span class="hero-blob hero-blob--c"></span>
+    </div>
+    <div data-partial="nav"></div>
+    <div class="layout">
+        <aside class="sidebar">
+            <nav class="sidebar__nav">
+                <a class="nav-item nav-item--active" href="./dashboard.html">
+                    <span class="nav-item__icon">🏠</span>
+                    <span class="nav-item__text">Dashboard</span>
+                </a>
+                <a class="nav-item" href="./books.html">
+                    <span class="nav-item__icon">📚</span>
+                    <span class="nav-item__text">Books</span>
+                </a>
+                <a class="nav-item" href="./issue.html">
+                    <span class="nav-item__icon">🔖</span>
+                    <span class="nav-item__text">Issue</span>
+                </a>
+                <a class="nav-item" href="./profile.html">
+                    <span class="nav-item__icon">👤</span>
+                    <span class="nav-item__text">Profile</span>
+                </a>
+            </nav>
+        </aside>
+
+        <div>
+            <main class="content">
+                <div class="page-hero">
+                    <div>
+                        <p class="eyebrow">Your overview</p>
+                        <h1 class="page-hero__title">Performance dashboard</h1>
+                        <p class="page-hero__meta">Track your catalog footprint, circulation velocity, and most recent activity in one glance. Switch themes anytime with the gold toggle up top.</p>
+                        <div class="page-hero__actions">
+                            <a class="btn btn--primary" href="./books.html">Manage books</a>
+                            <a class="btn btn--outline" href="./issue.html">View issues</a>
+                        </div>
+                    </div>
+                    <div class="pill">Live data · Last sync just now</div>
+                </div>
+
+                <section class="stat-grid">
+                    <article class="stat-card">
+                        <div class="stat-card__icon">📚</div>
+                        <div class="stat-card__label">Your books</div>
+                        <div class="stat-card__value" id="stat-my-books">0</div>
+                        <div class="stat-card__hint">Books you have added</div>
+                    </article>
+                    <article class="stat-card">
+                        <div class="stat-card__icon">📈</div>
+                        <div class="stat-card__label">Total borrowed</div>
+                        <div class="stat-card__value" id="stat-issues-total">0</div>
+                        <div class="stat-card__hint" style="color:#eab308;">All time</div>
+                    </article>
+                    <article class="stat-card">
+                        <div class="stat-card__icon">⏳</div>
+                        <div class="stat-card__label">Currently issued</div>
+                        <div class="stat-card__value" id="stat-issues-active">0</div>
+                        <div class="stat-card__hint">Now checked out</div>
+                    </article>
+                    <article class="stat-card">
+                        <div class="stat-card__icon">✅</div>
+                        <div class="stat-card__label">Returned</div>
+                        <div class="stat-card__value" id="stat-issues-returned">0</div>
+                        <div class="stat-card__hint">Completed loans</div>
+                    </article>
+                </section>
+
+                <section class="grid grid--two">
+                    <div class="glass-panel">
+                        <div class="section__title">
+                            <div>
+                                <div class="eyebrow">Velocity</div>
+                                <span class="section__subtitle">Circulation over the last 6 months</span>
+                            </div>
+                            <span class="chip">Live</span>
+                        </div>
+                        <div style="height:260px;">
+                            <canvas id="chart-circulation"></canvas>
+                        </div>
+                    </div>
+                    <div class="glass-panel">
+                        <div class="section__title">
+                            <div>
+                                <div class="eyebrow">Activity</div>
+                                <span class="section__subtitle">Recent checkouts & returns</span>
+                            </div>
+                            <a class="btn btn--outline" href="./books.html">Manage</a>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Book</th>
+                                        <th>User</th>
+                                        <th>Status</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-activity-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <div data-partial="footer"></div>
+
+    <script type="module">
+        import { loadLayout } from './assets/js/layout.js';
+        import { initThemeToggle } from './assets/js/theme.js';
+        import { setPageTransition, showToast } from './assets/js/ui.js';
+        import { requireAuth, bindLogout } from './assets/js/auth.js';
+
+        (async () => {
+        requireAuth();
+        try { await loadLayout(); } catch(e) { console.error('Layout failed', e); }
+        setPageTransition();
+        initThemeToggle();
+        bindLogout();
+
+        async function loadStats() {
+            try {
+                const res = await fetch('./api/dashboard_stats.php', { credentials: 'include' });
+                const json = await res.json();
+                if (!res.ok || json.error) {
+                    throw new Error(json.error || 'Failed to load stats');
+                }
+
+                const data = json.data || {};
+                const totals = data.totals || {};
+                const velocity = data.velocity || {};
+                const recent = data.recent || [];
+
+                const elMyBooks = document.getElementById('stat-my-books');
+                const elIssuesTotal = document.getElementById('stat-issues-total');
+                const elIssuesActive = document.getElementById('stat-issues-active');
+                const elIssuesReturned = document.getElementById('stat-issues-returned');
+
+                if (elMyBooks) elMyBooks.textContent = totals.my_books ?? 0;
+                if (elIssuesTotal) elIssuesTotal.textContent = totals.issues_total ?? 0;
+                if (elIssuesActive) elIssuesActive.textContent = totals.issues_active ?? 0;
+                if (elIssuesReturned) elIssuesReturned.textContent = totals.issues_returned ?? 0;
+
+                // Recent activity
+                const tbody = document.getElementById('recent-activity-body');
+                if (tbody) {
+                    tbody.innerHTML = '';
+
+                    if (!Array.isArray(recent) || recent.length === 0) {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = '<td colspan="4" style="color:var(--muted);">No recent activity</td>';
+                        tbody.appendChild(tr);
+                    } else {
+                        const now = new Date();
+                        recent.forEach((item) => {
+                            const issuedAt = item.time ? new Date(item.time.replace(' ', 'T')) : null;
+                            let ago = '';
+                            if (issuedAt && !isNaN(issuedAt)) {
+                                const diffMs = now - issuedAt;
+                                const diffMin = Math.floor(diffMs / 60000);
+                                if (diffMin < 1) {
+                                    ago = 'just now';
+                                } else if (diffMin < 60) {
+                                    ago = diffMin + 'm ago';
+                                } else {
+                                    const diffHr = Math.floor(diffMin / 60);
+                                    if (diffHr < 24) {
+                                        ago = diffHr + 'h ago';
+                                    } else {
+                                        const diffDay = Math.floor(diffHr / 24);
+                                        ago = diffDay + 'd ago';
+                                    }
+                                }
+                            }
+
+                            const status = (item.status || '').toLowerCase();
+                            const badgeClass = status === 'return' ? 'badge--success' : 'badge--warning';
+                            const statusLabel = status === 'return' ? 'Returned' : 'Issued';
+
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>${item.book || ''}</td>
+                                <td>You</td>
+                                <td><span class="badge ${badgeClass}">${statusLabel}</span></td>
+                                <td>${ago}</td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                    }
+                }
+
+                const ctx = document.getElementById('chart-circulation');
+                if (ctx && window.Chart && Array.isArray(velocity.labels) && Array.isArray(velocity.data)) {
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: velocity.labels,
+                            datasets: [{
+                                label: 'Issues',
+                                data: velocity.data,
+                                fill: true,
+                                tension: 0.4,
+                                backgroundColor: 'rgba(31, 111, 235, 0.12)',
+                                borderColor: '#1f6feb',
+                                borderWidth: 2,
+                                pointRadius: 0
+                            }]
+                        },
+                        options: {
+                            plugins: { legend: { display: false } },
+                            scales: { y: { grid: { color: 'rgba(148, 163, 184, 0.12)' } }, x: { grid: { display: false } } },
+                            responsive: true,
+                            maintainAspectRatio: false
+                        }
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+                showToast(err.message || 'Failed to load dashboard', 'error');
+            }
+        }
+
+        await loadStats();
+        })();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

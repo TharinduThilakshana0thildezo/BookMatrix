@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel | LibraryOS</title>
+  <script>
+    (function() {
+      try {
+        var key = 'lms_theme';
+        var saved = localStorage.getItem(key);
+        var mode = (saved === 'dark' || saved === 'light')
+          ? saved
+          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        var root = document.documentElement;
+        root.classList.toggle('dark', mode === 'dark');
+        root.dataset.theme = mode;
+      } catch (e) {
+        // fail silently; main theme.js will handle it later
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="./assets/css/main.css">
+  <link rel="stylesheet" href="./assets/css/dark-mode.css">
+  <link rel="stylesheet" href="./assets/css/responsive.css">
+</head>
+<body>
+  <div class="hero-bg" aria-hidden="true">
+    <span class="hero-blob hero-blob--a"></span>
+    <span class="hero-blob hero-blob--b"></span>
+    <span class="hero-blob hero-blob--c"></span>
+  </div>
+
+  <nav class="site-nav">
+    <div class="site-nav__brand">
+      <div class="brand-mark">⚡</div>
+      <div class="brand-copy">
+        <span class="brand-name">Admin Control</span>
+        <span class="brand-tagline">LibraryOS</span>
+      </div>
+    </div>
+    <div class="site-nav__links">
+      <a href="./admin-dashboard.html">Overview</a>
+      <a href="./books.html">User view</a>
+    </div>
+    <div class="site-nav__actions">
+      <button class="theme-toggle--nav" type="button" aria-label="Toggle dark mode" data-theme-toggle>
+        <span class="theme-toggle__icon" data-theme-icon>☾</span>
+      </button>
+      <button class="btn btn--outline" data-admin-logout>Logout</button>
+    </div>
+  </nav>
+
+  <div class="layout" style="grid-template-columns: 1fr;">
+    <main class="content">
+      <div class="page-hero">
+        <div>
+          <p class="eyebrow">Admin overview</p>
+          <h1 class="page-hero__title">Advanced admin panel</h1>
+          <p class="page-hero__meta">Full-site control: monitor totals, manage all user-added books, and review recent activity.</p>
+          <div class="page-hero__actions">
+            <a class="btn btn--primary" href="./books.html">Switch to user view</a>
+            <a class="btn btn--outline" href="./admin-login.html" data-admin-logout>Logout</a>
+          </div>
+        </div>
+        <div class="pill">Authenticated admin session</div>
+      </div>
+
+      <section class="stat-grid" id="admin-stats">
+        <article class="stat-card">
+          <div class="stat-card__icon">📚</div>
+          <div class="stat-card__label">Total books</div>
+          <div class="stat-card__value" data-stat="books">0</div>
+          <div class="stat-card__hint">All books in catalog</div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-card__icon">👥</div>
+          <div class="stat-card__label">Users</div>
+          <div class="stat-card__value" data-stat="users">0</div>
+          <div class="stat-card__hint">Registered users</div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-card__icon">🔖</div>
+          <div class="stat-card__label">Total issues</div>
+          <div class="stat-card__value" data-stat="issues">0</div>
+          <div class="stat-card__hint">All time</div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-card__icon">⏳</div>
+          <div class="stat-card__label">Active issues</div>
+          <div class="stat-card__value" data-stat="issues_active">0</div>
+          <div class="stat-card__hint">Currently out</div>
+        </article>
+      </section>
+
+      <section class="grid grid--two">
+        <div class="glass-panel">
+          <div class="section__title">
+            <div>
+              <div class="eyebrow">Inventory</div>
+              <span class="section__subtitle">All books (user-added + admin)</span>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Title</th>
+                  <th>Author</th>
+                  <th>Category</th>
+                  <th>Owner</th>
+                  <th>ISBN</th>
+                </tr>
+              </thead>
+              <tbody id="admin-books-body"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="glass-panel">
+          <div class="section__title">
+            <div>
+              <div class="eyebrow">Signals</div>
+              <span class="section__subtitle">Recent books, users, and issues</span>
+            </div>
+          </div>
+          <div class="grid" style="gap: var(--spacing-md);">
+            <div>
+              <p class="eyebrow">Recent books</p>
+              <ul id="admin-recent-books" class="list" style="display:grid; gap:8px;"></ul>
+            </div>
+            <div class="divider"></div>
+            <div>
+              <p class="eyebrow">Recent users</p>
+              <ul id="admin-recent-users" class="list" style="display:grid; gap:8px;"></ul>
+            </div>
+            <div class="divider"></div>
+            <div>
+              <p class="eyebrow">Recent issues</p>
+              <ul id="admin-recent-issues" class="list" style="display:grid; gap:8px;"></ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="glass-panel" style="margin-top: var(--spacing-xl);">
+        <div class="section__title">
+          <div>
+            <div class="eyebrow">Users</div>
+            <span class="section__subtitle">All registered users with controls</span>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Unique ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Contact</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-users-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module">
+    import { requireAdmin, fetchAdminOverview, bindAdminLogout, fetchAdminUsers, deleteAdminUser } from './assets/js/admin.js';
+    import { initThemeToggle } from './assets/js/theme.js';
+    import { setPageTransition, showToast } from './assets/js/ui.js';
+
+    (async () => {
+    setPageTransition();
+    initThemeToggle();
+    if (!requireAdmin()) return;
+    bindAdminLogout();
+
+    const statsMap = {
+      books: document.querySelector('[data-stat="books"]'),
+      users: document.querySelector('[data-stat="users"]'),
+      issues: document.querySelector('[data-stat="issues"]'),
+      issues_active: document.querySelector('[data-stat="issues_active"]'),
+    };
+
+    const booksBody = document.getElementById('admin-books-body');
+    const recentBooks = document.getElementById('admin-recent-books');
+    const recentUsers = document.getElementById('admin-recent-users');
+    const recentIssues = document.getElementById('admin-recent-issues');
+    const usersBody = document.getElementById('admin-users-body');
+
+    function renderList(el, items, formatter) {
+      if (!el) return;
+      el.innerHTML = '';
+      if (!items || !items.length) {
+        el.innerHTML = '<li style="color:var(--muted);">No entries</li>';
+        return;
+      }
+      items.forEach((item) => {
+        const li = document.createElement('li');
+        li.innerHTML = formatter(item);
+        el.appendChild(li);
+      });
+    }
+
+    function renderTable(books) {
+      if (!booksBody) return;
+      booksBody.innerHTML = '';
+      (books || []).forEach((b) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${b.book_id}</td>
+          <td>${b.book_name || ''}</td>
+          <td>${b.book_author || ''}</td>
+          <td>${b.book_category || ''}</td>
+          <td>${b.user_name || b.owner_user_id || '—'}</td>
+          <td>${b.isbn || ''}</td>
+        `;
+        booksBody.appendChild(tr);
+      });
+    }
+
+    function renderUsers(users) {
+      if (!usersBody) return;
+      usersBody.innerHTML = '';
+      (users || []).forEach((u) => {
+        const tr = document.createElement('tr');
+        tr.dataset.userId = u.user_id;
+        tr.innerHTML = `
+          <td>${u.user_id}</td>
+          <td>${u.user_unique_id || ''}</td>
+          <td>${u.user_name || ''}</td>
+          <td>${u.user_email_address || ''}</td>
+          <td>${u.user_contact_no || ''}</td>
+          <td>${u.user_status || ''}</td>
+          <td>${u.user_created_on || ''}</td>
+          <td><button class="btn btn--outline" data-user-delete="${u.user_id}">Delete</button></td>
+        `;
+        usersBody.appendChild(tr);
+      });
+    }
+
+    function bindUserDelete() {
+      if (!usersBody) return;
+      usersBody.addEventListener('click', async (e) => {
+        const btn = e.target.closest('[data-user-delete]');
+        if (!btn) return;
+        const id = parseInt(btn.getAttribute('data-user-delete'), 10);
+        if (!id || Number.isNaN(id)) return;
+        if (!confirm('Are you sure you want to permanently delete this user and their data?')) return;
+        try {
+          await deleteAdminUser(id);
+          showToast && showToast('User deleted', 'info');
+          await loadAdmin();
+        } catch (err) {
+          console.error(err);
+          showToast ? showToast(err.message || 'Failed to delete user', 'error') : alert(err.message || 'Failed to delete user');
+        }
+      });
+    }
+
+    async function loadAdmin() {
+      try {
+        const [overview, users] = await Promise.all([
+          fetchAdminOverview(),
+          fetchAdminUsers(),
+        ]);
+        const totals = overview.totals || {};
+        if (statsMap.books) {
+          const booksCount = totals.books ?? 0;
+          statsMap.books.textContent = booksCount.toLocaleString('en-US') + '+';
+        }
+        if (statsMap.users) statsMap.users.textContent = totals.users ?? 0;
+        if (statsMap.issues) statsMap.issues.textContent = totals.issues ?? 0;
+        if (statsMap.issues_active) statsMap.issues_active.textContent = totals.issues_active ?? 0;
+        renderTable(overview.books);
+
+        renderList(recentBooks, overview.recent_books, (b) => `<strong>${b.book_name || 'Untitled'}</strong> · ${b.book_author || 'Unknown'} · ${b.book_category || ''}`);
+        renderList(recentUsers, overview.recent_users, (u) => `<strong>${u.user_name || 'User'}</strong> · ${u.user_email_address || ''}`);
+        renderList(recentIssues, overview.recent_issues, (i) => `${i.book_isbn || ''} · ${i.book_issue_status || ''} · ${i.book_issue_date || ''}`);
+
+        renderUsers(users);
+      } catch (err) {
+        console.error(err);
+        showToast ? showToast(err.message || 'Failed to load admin data', 'error') : alert(err.message || 'Failed to load admin data');
+      }
+    }
+
+    bindUserDelete();
+    loadAdmin();
+    })();
+  </script>
+</body>
+</html>

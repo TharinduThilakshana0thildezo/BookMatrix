@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduCatalog | Terms</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/img/educatalog-logo.svg">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./assets/css/main.css">
+    <link rel="stylesheet" href="./assets/css/dark-mode.css">
+    <link rel="stylesheet" href="./assets/css/responsive.css">
+</head>
+<body>
+    <div class="hero-bg" aria-hidden="true">
+        <span class="hero-blob hero-blob--a"></span>
+        <span class="hero-blob hero-blob--b"></span>
+        <span class="hero-blob hero-blob--c"></span>
+    </div>
+    <div data-partial="nav"></div>
+
+    <main class="content" style="padding-top:32px;">
+        <section class="lux-hero">
+            <div class="lux-hero__grid">
+                <div>
+                    <span class="lux-hero__badge">Clear · Fair · Compliant</span>
+                    <h1 class="lux-hero__title">The EduCatalog terms, distilled for trust.</h1>
+                    <p class="lux-hero__copy">We crafted concise terms so teams and patrons know exactly how EduCatalog operates—service boundaries, acceptable use, uptime posture, and your rights when things change.</p>
+                    <div class="lux-hero__cta">
+                        <a class="btn btn--primary" href="#terms">Review terms</a>
+                        <a class="btn btn--outline" href="./support.html">Need clarification?</a>
+                    </div>
+                </div>
+                <div class="lux-hero__panel">
+                    <div class="lux-hero__stat">
+                        <span class="lux-hero__stat-label">Uptime posture</span>
+                        <span class="lux-hero__stat-value">99.5% target</span>
+                    </div>
+                    <div class="lux-hero__stat">
+                        <span class="lux-hero__stat-label">Support SLA</span>
+                        <span class="lux-hero__stat-value">24h response</span>
+                    </div>
+                    <div class="lux-hero__stat">
+                        <span class="lux-hero__stat-label">Change notice</span>
+                        <span class="lux-hero__stat-value">14 days</span>
+                    </div>
+                </div>
+            </div>
+            <div class="lux-hero__glow"></div>
+            <div class="lux-hero__orb"></div>
+            <div class="lux-hero__rings"></div>
+        </section>
+
+        <section id="terms" class="section" style="margin-top:24px;">
+            <div class="section__title">
+                <span>Terms Snapshot</span>
+                <span class="chip">Readable</span>
+            </div>
+            <div class="grid grid--two">
+                <div class="card">
+                    <div class="card__label">Acceptable use</div>
+                    <p class="hero__subtitle">No abuse, scraping, or unauthorized sharing. Respect intellectual property and user privacy.</p>
+                </div>
+                <div class="card">
+                    <div class="card__label">Service availability</div>
+                    <p class="hero__subtitle">We target high availability with planned maintenance windows announced ahead of time.</p>
+                </div>
+                <div class="card">
+                    <div class="card__label">Content ownership</div>
+                    <p class="hero__subtitle">Your institution owns its data. EduCatalog processes it solely to deliver services.</p>
+                </div>
+                <div class="card">
+                    <div class="card__label">Termination</div>
+                    <p class="hero__subtitle">Exports provided on request. We delete hosted data after account closure per retention rules.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div data-partial="footer"></div>
+
+    <script type="module">
+        import { loadLayout } from './assets/js/layout.js';
+        import { initThemeToggle } from './assets/js/theme.js';
+        import { setPageTransition } from './assets/js/ui.js';
+        await loadLayout();
+        setPageTransition();
+        initThemeToggle();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

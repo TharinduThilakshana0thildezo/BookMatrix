@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | LibraryOS</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/img/educatalog-logo.svg">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./assets/css/main.css">
+    <link rel="stylesheet" href="./assets/css/dark-mode.css">
+    <link rel="stylesheet" href="./assets/css/responsive.css">
+</head>
+<body>
+    <div class="hero-bg" aria-hidden="true">
+        <span class="hero-blob hero-blob--a"></span>
+        <span class="hero-blob hero-blob--b"></span>
+        <span class="hero-blob hero-blob--c"></span>
+    </div>
+    <div data-partial="nav"></div>
+    <div class="layout">
+        <aside class="sidebar">
+            <nav class="sidebar__nav">
+                <a class="nav-item" href="./dashboard.html">
+                    <span class="nav-item__icon">🏠</span>
+                    <span class="nav-item__text">Dashboard</span>
+                </a>
+                <a class="nav-item" href="./books.html">
+                    <span class="nav-item__icon">📚</span>
+                    <span class="nav-item__text">Books</span>
+                </a>
+                <a class="nav-item" href="./issue.html">
+                    <span class="nav-item__icon">🔖</span>
+                    <span class="nav-item__text">Issue</span>
+                </a>
+                <a class="nav-item nav-item--active" href="./profile.html">
+                    <span class="nav-item__icon">👤</span>
+                    <span class="nav-item__text">Profile</span>
+                </a>
+            </nav>
+        </aside>
+
+        <div>
+            <main class="content">
+                <div class="page-hero">
+                    <div>
+                        <p class="eyebrow">Identity</p>
+                        <h1 class="page-hero__title">Profile & preferences</h1>
+                        <p class="page-hero__meta">Keep your contact info, password, and avatar current. Changes save securely and sync across your session.</p>
+                        <div class="page-hero__actions">
+                            <a class="btn btn--outline" href="./dashboard.html">Back to dashboard</a>
+                        </div>
+                    </div>
+                    <div class="pill">Secure area</div>
+                </div>
+
+                <section class="grid grid--two">
+                    <div class="glass-panel">
+                        <div class="section__title">
+                            <span>Account details</span>
+                            <span class="chip">Secure</span>
+                        </div>
+                        <form class="form" id="profile-form" enctype="multipart/form-data">
+                            <div class="form__group">
+                                <label class="form__label" for="user_name">Full Name</label>
+                                <input class="form__control" type="text" id="user_name" name="user_name" required value="">
+                            </div>
+                            <div class="form__group">
+                                <label class="form__label" for="user_email_address">Email</label>
+                                <input class="form__control" type="email" id="user_email_address" name="user_email_address" required value="">
+                            </div>
+                            <div class="form__group">
+                                <label class="form__label" for="user_contact_no">Phone</label>
+                                <input class="form__control" type="tel" id="user_contact_no" name="user_contact_no" value="">
+                            </div>
+                            <div class="form__group">
+                                <label class="form__label" for="user_address">Address</label>
+                                <textarea class="form__control" id="user_address" name="user_address"></textarea>
+                            </div>
+                            <div class="form__group">
+                                <label class="form__label" for="user_password">Password</label>
+                                <input class="form__control" type="password" id="user_password" name="user_password" required value="">
+                            </div>
+                            <div class="form__group">
+                                <label class="form__label" for="user_profile">Profile Photo (225x225, <2MB)</label>
+                                <input class="form__control" type="file" id="user_profile" name="user_profile" accept="image/png,image/jpeg">
+                                <input type="hidden" name="hidden_user_profile" value="">
+                                <p class="form__hint">JPEG/PNG only. Required dimensions enforced by backend.</p>
+                            </div>
+                            <button class="btn btn--primary" type="submit">Save changes</button>
+                        </form>
+                    </div>
+                    <div class="glass-panel">
+                        <div class="section__title">
+                            <span>User details</span>
+                            <span class="chip">From database</span>
+                        </div>
+                        <div class="details-card">
+                            <p><strong>User ID:</strong> <span id="user-detail-id">-</span></p>
+                            <p><strong>Name:</strong> <span id="user-detail-name">-</span></p>
+                            <p><strong>Email:</strong> <span id="user-detail-email">-</span></p>
+                            <p><strong>Phone:</strong> <span id="user-detail-phone">-</span></p>
+                            <p><strong>Address:</strong> <span id="user-detail-address">-</span></p>
+                        </div>
+
+                        <div class="form__group" style="margin-top: var(--spacing-lg);">
+                            <button class="btn btn--primary" data-logout>Logout</button>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="section__title">
+                            <span>Preferences</span>
+                            <span class="chip">Personal</span>
+                        </div>
+                        
+                        <div class="form__group">
+                            <label class="form__label">Notifications</label>
+                            <div class="chip">Toast notifications enabled</div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <div data-partial="footer"></div>
+
+    <script type="module">
+        import { loadLayout } from './assets/js/layout.js';
+        import { requireAuth, bindLogout, bindProfileForm } from './assets/js/auth.js';
+        import { initThemeToggle } from './assets/js/theme.js';
+        import { setPageTransition } from './assets/js/ui.js';
+
+        (async () => {
+            requireAuth();
+            try {
+                await loadLayout();
+            } catch (e) {
+                console.error('Failed to load layout', e);
+            }
+            setPageTransition();
+            initThemeToggle();
+            bindLogout();
+            bindProfileForm();
+        })();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

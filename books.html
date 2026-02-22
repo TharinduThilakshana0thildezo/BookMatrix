@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books | LibraryOS</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/img/educatalog-logo.svg">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./assets/css/main.css">
+    <link rel="stylesheet" href="./assets/css/dark-mode.css">
+    <link rel="stylesheet" href="./assets/css/responsive.css">
+</head>
+<body>
+    <div class="hero-bg" aria-hidden="true">
+        <span class="hero-blob hero-blob--a"></span>
+        <span class="hero-blob hero-blob--b"></span>
+        <span class="hero-blob hero-blob--c"></span>
+    </div>
+    <div data-partial="nav"></div>
+    <div class="layout">
+        <aside class="sidebar">
+            <nav class="sidebar__nav">
+                <a class="nav-item" href="./dashboard.html">
+                    <span class="nav-item__icon">🏠</span>
+                    <span class="nav-item__text">Dashboard</span>
+                </a>
+                <a class="nav-item nav-item--active" href="./books.html">
+                    <span class="nav-item__icon">📚</span>
+                    <span class="nav-item__text">Books</span>
+                </a>
+                <a class="nav-item" href="./issue.html">
+                    <span class="nav-item__icon">🔖</span>
+                    <span class="nav-item__text">Issue</span>
+                </a>
+                <a class="nav-item" href="./profile.html">
+                    <span class="nav-item__icon">👤</span>
+                    <span class="nav-item__text">Profile</span>
+                </a>
+            </nav>
+        </aside>
+
+        <div>
+            <main class="content">
+                <div class="page-hero">
+                    <div>
+                        <p class="eyebrow">Catalog</p>
+                        <h1 class="page-hero__title">Your personal library</h1>
+                        <p class="page-hero__meta">Browse, filter, and manage the titles you’ve added. Add new books instantly and keep the grid in sync in real time.</p>
+                        <div class="page-hero__actions">
+                            <button class="btn btn--primary" data-modal-open="modal-add">Add book</button>
+                            <a class="btn btn--outline" href="./dashboard.html">Back to dashboard</a>
+                        </div>
+                    </div>
+                    <div class="pill">Per-user scope · Live</div>
+                </div>
+
+                <section class="grid">
+                    <div class="glass-panel">
+                        <div class="page-header" style="margin-bottom:12px;">
+                            <div class="search-bar">
+                                <span>🔍</span>
+                                <input id="book-search" type="search" placeholder="Search title or author">
+                            </div>
+                            <div class="filter-group">
+                                <select class="form__control" id="book-filter">
+                                    <option value="all">All</option>
+                                    <option value="available">Available</option>
+                                    <option value="issued">Issued</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="books-grid" class="cards-grid"></div>
+                    </div>
+
+                    <div class="glass-panel">
+                        <div class="section__title">
+                            <span>Table view</span>
+                            <span class="chip">Live</span>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Title</th>
+                                        <th>Author</th>
+                                        <th>Category</th>
+                                        <th>Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="books-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <div data-partial="footer"></div>
+
+    <div id="modal-add" class="modal" aria-hidden="true">
+        <div class="modal__content">
+            <div class="page-header" style="margin-bottom:12px;">
+                <h3 class="page-header__title">Add book</h3>
+                <button data-modal-close>✕</button>
+            </div>
+            <form class="form" id="add-book-form">
+                <div class="form__group">
+                    <label class="form__label" for="title">Title</label>
+                    <input class="form__control" type="text" id="title" name="title" required>
+                </div>
+                <div class="form__group">
+                    <label class="form__label" for="author">Author</label>
+                    <input class="form__control" type="text" id="author" name="author" required>
+                </div>
+                <div class="form__group">
+                    <label class="form__label" for="category">Category</label>
+                    <input class="form__control" type="text" id="category" name="category" required>
+                </div>
+                <div class="form__group">
+                    <label class="form__label" for="location">Location rack</label>
+                    <input class="form__control" type="text" id="location" name="location" placeholder="e.g. Rack A1">
+                </div>
+                <div class="form__group">
+                    <label class="form__label" for="isbn">ISBN</label>
+                    <input class="form__control" type="text" id="isbn" name="isbn" required>
+                </div>
+                <div class="form__group">
+                    <label class="form__label" for="copies">Number of copies</label>
+                    <input class="form__control" type="number" id="copies" name="copies" min="1" required>
+                </div>
+                <button class="btn btn--primary" type="submit" id="save-book-button">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { loadLayout } from './assets/js/layout.js';
+        import { requireAuth, bindLogout } from './assets/js/auth.js';
+        import { initThemeToggle } from './assets/js/theme.js';
+        import { bindModals, setPageTransition } from './assets/js/ui.js';
+        import { initBooksPage } from './assets/js/books.js';
+
+        (async () => {
+            requireAuth();
+            await loadLayout();
+            setPageTransition();
+            initThemeToggle();
+            bindLogout();
+            bindModals();
+            initBooksPage();
+        })();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
